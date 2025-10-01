@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import Dashboard from '../views/Dashboard.vue'
 import Bots from '../views/Bots.vue'
+import BotDetail from '../views/BotDetail.vue'
 import Login from '../views/Login.vue'
 import Profile from '../views/Profile.vue'
 import Users from '../views/Users.vue'
@@ -23,6 +24,12 @@ const routes = [
     path: '/bots',
     name: 'Bots',
     component: Bots,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/bots/:id',
+    name: 'BotDetail',
+    component: BotDetail,
     meta: { requiresAuth: true }
   },
   {
