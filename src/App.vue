@@ -6,14 +6,15 @@
         <nav>
           <router-link to="/">Dashboard</router-link>
           <router-link to="/bots">Bots</router-link>
+          <router-link v-if="authStore.isAdmin" to="/users">Users</router-link>
         </nav>
       </div>
 
       <div class="user-menu">
-        <div class="user-info">
+        <router-link to="/profile" class="user-info">
           <span class="user-name">{{ authStore.user?.name }}</span>
           <span class="user-role">{{ authStore.user?.role }}</span>
-        </div>
+        </router-link>
         <button @click="handleLogout" class="logout-button">Logout</button>
       </div>
     </header>
@@ -27,9 +28,13 @@
 <script setup lang="ts">
 import { useAuthStore } from './stores/auth'
 import { useRouter } from 'vue-router'
+import { useSessionTimeout } from './composables/useSessionTimeout'
 
 const authStore = useAuthStore()
 const router = useRouter()
+
+// Setup session timeout monitoring
+useSessionTimeout()
 
 const handleLogout = async () => {
   await authStore.logout()
@@ -87,6 +92,16 @@ const handleLogout = async () => {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.user-info:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .user-name {

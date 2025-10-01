@@ -55,11 +55,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const email = ref('')
@@ -68,12 +69,18 @@ const rememberMe = ref(false)
 const loading = ref(false)
 const error = ref('')
 
+onMounted(() => {
+  if (route.query.reason === 'timeout') {
+    error.value = 'Your session has expired due to inactivity. Please login again.'
+  }
+})
+
 const handleLogin = async () => {
   error.value = ''
   loading.value = true
 
   try {
-    await authStore.login(email.value, password.value)
+    await authStore.login(email.value, password.value, rememberMe.value)
     router.push('/')
   } catch (err: any) {
     error.value = err.message || 'Login failed. Please try again.'
